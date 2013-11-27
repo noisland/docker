@@ -29,7 +29,7 @@ To list available commands, either run ``docker`` with no parameters or execute
       -D=false: Enable debug mode
       -H=[unix:///var/run/docker.sock]: tcp://[host[:port]] to bind or unix://[/path/to/socket] to use. When host=[0.0.0.0], port=[4243] or path=[/var/run/docker.sock] is omitted, default values are used.
       -api-enable-cors=false: Enable CORS headers in the remote API
-      -b="": Attach containers to a pre-existing network bridge; use 'none' to disable container networking
+      -b="": Attach containers to a pre-existing network bridge; use 'none' to disable container networking; use 'host' for host networking
       -bip="": Use the provided CIDR notation address for the dynamically created bridge (docker0); Mutually exclusive of -b
       -d=false: Enable daemon mode
       -dns="": Force docker to use specific DNS servers
@@ -312,6 +312,7 @@ or ``config`` when running ``docker inspect IMAGEID``.
       "Domainname" : "",
       "WorkingDir" : "/",
       "NetworkDisabled" : false,
+      "NetworkUseHost" : false,
       "Memory" : 0,
       "AttachStdout" : false
   }' $CONTAINER_ID
@@ -1006,6 +1007,7 @@ image is removed.
       -privileged=false: Give extended privileges to this container
       -m="": Memory limit (format: <number><optional unit>, where unit = b, k, m or g)
       -n=true: Enable networking for this container
+      -hn=true: Use host networking for this container (no network namespace)
       -p=[]: Map a network port to the container
       -rm=false: Automatically remove the container when it exits (incompatible with -d)
       -t=false: Allocate a pseudo-tty

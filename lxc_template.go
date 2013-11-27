@@ -6,6 +6,9 @@ import (
 )
 
 const LxcTemplate = `
+{{if .Config.NetworkUseHost}}
+# using host network (-hn=true)
+{{else}}
 {{if .Config.NetworkDisabled}}
 # network is disabled (-n=false)
 lxc.network.type = empty
@@ -14,6 +17,7 @@ lxc.network.type = empty
 lxc.network.type = veth
 lxc.network.link = {{.NetworkSettings.Bridge}}
 lxc.network.name = eth0
+{{end}}
 {{end}}
 
 # root filesystem
