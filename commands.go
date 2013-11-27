@@ -1735,6 +1735,7 @@ func parseRun(cmd *flag.FlagSet, args []string, capabilities *Capabilities) (*Co
 		flAutoRemove      = cmd.Bool("rm", false, "Automatically remove the container when it exits (incompatible with -d)")
 		flDetach          = cmd.Bool("d", false, "Detached mode: Run container in the background, print new container id")
 		flNetwork         = cmd.Bool("n", true, "Enable networking for this container")
+		flNetworkUseHost  = cmd.Bool("hn", false, "Use host networking for this container (no network namespace)")
 		flPrivileged      = cmd.Bool("privileged", false, "Give extended privileges to this container")
 		flPublishAll      = cmd.Bool("P", false, "Publish all exposed ports to the host interfaces")
 		flStdin           = cmd.Bool("i", false, "Keep stdin open even if not attached")
@@ -1871,7 +1872,8 @@ func parseRun(cmd *flag.FlagSet, args []string, capabilities *Capabilities) (*Co
 		ExposedPorts:    ports,
 		User:            *flUser,
 		Tty:             *flTty,
-		NetworkDisabled: !*flNetwork,
+		NetworkDisabled: !*flNetwork || *flNetworkUseHost,
+		NetworkUseHost:	 *flNetworkUseHost,
 		OpenStdin:       *flStdin,
 		Memory:          flMemory,
 		CpuShares:       *flCpuShares,

@@ -161,7 +161,12 @@ func setupEnv(args *DockerInitArgs) {
 		if len(parts) == 1 {
 			parts = append(parts, "")
 		}
-		os.Setenv(parts[0], parts[1])
+		if parts[0] == "HOSTNAME" && parts[1] == "" {
+			hostname, _ := os.Hostname()
+			os.Setenv("HOSTNAME", hostname)
+		} else {
+			os.Setenv(parts[0], parts[1])
+		}
 	}
 }
 
