@@ -101,6 +101,7 @@ type Config struct {
 	WorkingDir      string
 	Entrypoint      []string
 	NetworkDisabled bool
+	NetworkUseHost  bool
 }
 
 type HostConfig struct {
@@ -523,6 +524,18 @@ func (container *Container) Start() (err error) {
 	}
 	if container.runtime.networkManager.disabled {
 		container.Config.NetworkDisabled = true
+	}
+	if container.runtime.networkManager.usehost {
+		container.Config.NetworkDisabled = true
+		container.Config.NetworkUseHost = true
+	}
+
+	if container.Config.NetworkUseHost {
+		container.Config.Hostname = ""
+		container.Config.Domainname = ""
+		container.HostnamePath = "/etc/hostname"
+		container.HostsPath = "/etc/hosts"
+	} else if container.runtime.networkManager.disabled {
 		container.buildHostnameAndHostsFiles("127.0.1.1")
 	} else {
 		if err := container.allocateNetwork(); err != nil {
@@ -542,7 +555,9 @@ func (container *Container) Start() (err error) {
 	}
 
 	if container.runtime.capabilities.IPv4ForwardingDisabled {
-		log.Printf("WARNING: IPv4 forwarding is disabled. Networking will not work")
+		if !container.Config.NetworkDisabled {
+			log.Printf("WARNING: IPv4 forwarding is disabled. Networking will not work")
+		}
 	}
 
 	if container.Volumes == nil || len(container.Volumes) == 0 {
