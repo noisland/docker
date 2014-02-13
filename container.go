@@ -1093,7 +1093,7 @@ func (container *Container) allocateNetwork() error {
 }
 
 func (container *Container) releaseNetwork() {
-	if container.Config.NetworkDisabled {
+	if container.Config.NetworkDisabled || container.Config.NetworkUseHost{
 		return
 	}
 	eng := container.runtime.eng
