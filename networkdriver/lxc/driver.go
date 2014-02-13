@@ -55,6 +55,7 @@ var (
 
 	defaultBindingIP  = net.ParseIP("0.0.0.0")
 	currentInterfaces = make(map[string]*networkInterface)
+	usehost  bool 
 )
 
 func init() {

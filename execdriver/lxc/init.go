@@ -13,6 +13,9 @@ import (
 )
 
 func setupHostname(args *execdriver.InitArgs) error {
+	if args.NetUseHost {
+		return nil
+	} 
 	hostname := getEnv(args, "HOSTNAME")
 	if hostname == "" {
 		return nil
@@ -22,6 +25,9 @@ func setupHostname(args *execdriver.InitArgs) error {
 
 // Setup networking
 func setupNetworking(args *execdriver.InitArgs) error {
+	if args.NetUseHost {
+		return nil
+	} 
 	if args.Ip != "" {
 		// eth0
 		iface, err := net.InterfaceByName("eth0")

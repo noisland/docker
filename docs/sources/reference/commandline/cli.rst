@@ -68,7 +68,7 @@ Commands
       -D, --debug=false: Enable debug mode
       -H, --host=[]: Multiple tcp://host:port or unix://path/to/socket to bind in daemon mode, single connection otherwise. systemd socket activation can be used with fd://[socketfd].
       --api-enable-cors=false: Enable CORS headers in the remote API
-      -b, --bridge="": Attach containers to a pre-existing network bridge; use 'none' to disable container networking
+      -b, --bridge="": Attach containers to a pre-existing network bridge; use 'none' to disable container networking; use 'host' for host networking 
       --bip="": Use this CIDR notation address for the network bridge's IP, not compatible with -b
       -d, --daemon=false: Enable daemon mode
       --dns=[]: Force docker to use specific DNS servers
@@ -361,6 +361,7 @@ or ``config`` when running ``docker inspect IMAGEID``.
       "Domainname" : "",
       "WorkingDir" : "/",
       "NetworkDisabled" : false,
+      "NetworkUseHost" : false, 
       "Memory" : 0,
       "AttachStdout" : false
   }' $CONTAINER_ID
@@ -1062,6 +1063,7 @@ image is removed.
       -h, --host="": Container host name
       -i, --interactive=false: Keep stdin open even if not attached
       --privileged=false: Give extended privileges to this container
+      --hostnetwork=false: Use host networking for this container (no network namespace)
       -m, --memory="": Memory limit (format: <number><optional unit>, where unit = b, k, m or g)
       -n, --networking=true: Enable networking for this container
       -p, --publish=[]: Map a network port to the container

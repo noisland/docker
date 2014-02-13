@@ -10,6 +10,7 @@ import (
 const (
 	defaultNetworkMtu    = 1500
 	DisableNetworkBridge = "none"
+	UseHostNetworkBridge = "host"
 )
 
 // FIXME: separate runtime configuration from http api configuration
@@ -27,6 +28,7 @@ type DaemonConfig struct {
 	GraphDriver                 string
 	Mtu                         int
 	DisableNetwork              bool
+	UseHostNetwork              bool
 }
 
 // ConfigFromJob creates and returns a new DaemonConfig object
@@ -53,6 +55,7 @@ func DaemonConfigFromJob(job *engine.Job) *DaemonConfig {
 		config.Mtu = GetDefaultNetworkMtu()
 	}
 	config.DisableNetwork = config.BridgeIface == DisableNetworkBridge
+	config.UseHostNetwork = config.BridgeIface == UseHostNetworkBridge
 
 	return config
 }

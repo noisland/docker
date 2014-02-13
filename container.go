@@ -430,6 +430,7 @@ func populateCommand(c *Container) {
 			IPAddress:   network.IPAddress,
 			IPPrefixLen: network.IPPrefixLen,
 			Mtu:         c.runtime.config.Mtu,
+			NetUseHost:  c.Config.NetworkUseHost, 
 		}
 	}
 
@@ -480,8 +481,18 @@ func (container *Container) Start() (err error) {
 
 	if container.runtime.config.DisableNetwork {
 		container.Config.NetworkDisabled = true
-		container.buildHostnameAndHostsFiles("127.0.1.1")
-	} else {
+	} 
+	if container.runtime.config.UseHostNetwork {
+		container.Config.NetworkUseHost = true
+	}
+	if container.Config.NetworkUseHost {
+		container.Config.Hostname = ""
+		container.Config.Domainname = ""
+		container.HostnamePath = "/etc/hostname"
+		container.HostsPath = "/etc/hosts"
+	} else if container.runtime.config.DisableNetwork { 
+	  	   container.buildHostnameAndHostsFiles("127.0.1.1")
+	} else{
 		if err := container.allocateNetwork(); err != nil {
 			return err
 		}
@@ -964,7 +975,7 @@ ff02::2		ip6-allrouters
 }
 
 func (container *Container) allocateNetwork() error {
-	if container.Config.NetworkDisabled {
+	if container.Config.NetworkDisabled || container.Config.NetworkUseHost {
 		return nil
 	}
 
@@ -975,7 +986,7 @@ func (container *Container) allocateNetwork() error {
 	)
 
 	if container.State.IsGhost() {
-		if container.runtime.config.DisableNetwork {
+		if container.runtime.config.DisableNetwork ||container.runtime.config.UseHostNetwork{
 			env = &engine.Env{}
 		} else {
 			currentIP := container.NetworkSettings.IPAddress
